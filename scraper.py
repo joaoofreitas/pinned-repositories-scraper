@@ -3,10 +3,17 @@
 from bs4 import BeautifulSoup
 from requests import get
 from json import dumps, dump
+from sys import argv
 
 data = {}
-USER = 'joaoofreitas'
 URL = 'https://github.com/'
+
+try:
+    USER = str(argv[1])
+except IndexError:
+    USER = input('Enter your github username: ')
+    str(USER)
+
 print('Parsing: ' + URL + USER)
 
 def dictToJSON(dict):
@@ -16,28 +23,32 @@ def dictToJSON(dict):
 html = get(URL + USER)
 
 if html.status_code != 200:
-    print('An error has ocurred. Please check if the website is online or correct.')
+    print('An error has ocurred. Please check if the website is online or your username correct.')
+else:
+    print('Success Parsing the Profile!\n')
+    print('Scrapping it...\n\n')
+    print('=====================================================================================') 
+    scrape = BeautifulSoup(html.text, 'html.parser')
+    pinnedRepos = scrape.findAll('div',{'class':'pinned-item-list-item-content'})
 
+    numberOfRepos = 0
+    for repos in pinnedRepos:
+        names = repos.findAll('span', {'class': 'repo'})
+        routeURLs = repos.findAll('a', href=True)
+        repoDescriptions = repos.findAll('p', {'class':'pinned-item-desc'})
 
-print('Success Parsing the Profile\nPretiffying it...\n\n')
-scrape = BeautifulSoup(html.text, 'html.parser')
-pinnedRepos = scrape.findAll('div',{'class':'pinned-item-list-item-content'})
-
-numberOfRepos = 0
-for repos in pinnedRepos:
-    names = repos.findAll('span', {'class': 'repo'})
-    routeURLs = repos.findAll('a', href=True)
-    repoDescriptions = repos.findAll('p', {'class':'pinned-item-desc'})
-
-    for name in names:
-        print(name.text)
-    for routeURL in routeURLs:
-        print(URL + USER + routeURL['href'])
-    for repoDescription in repoDescriptions:
-        print(repoDescription.text)
+        for name in names:
+            print(name.text)
+        for routeURL in routeURLs:
+            print(URL + USER + routeURL['href'])
+        for repoDescription in repoDescriptions:
+            print(repoDescription.text)
    
-    numberOfRepos += 1
-    data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text)
+        numberOfRepos += 1
+        data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text)
+    
 
-with open('fetchedData.json', 'w+', encoding='utf-8') as fetchedData:
-    dump(dictToJSON(data), fetchedData, ensure_ascii=False, indent=4)
+    print('=====================================================================================') 
+    print('Converting it all to JSON')
+    with open('fetchedData.json', 'w+', encoding='utf-8') as fetchedData:
+        dump(dictToJSON(data), fetchedData, ensure_ascii=False, indent=4)
