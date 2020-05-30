@@ -2,14 +2,14 @@
 
 from bs4 import BeautifulSoup
 from requests import get
-from json import dumps
+from json import dumps, dump
 
 data = {}
 USER = 'joaoofreitas'
 URL = 'https://github.com/'
 print('Parsing: ' + URL + USER)
 
-def dictToJson(dict):
+def dictToJSON(dict):
     dumpedDict = dumps(dict)
     return dumpedDict
 
@@ -38,4 +38,6 @@ for repos in pinnedRepos:
    
     numberOfRepos += 1
     data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text)
- 
+
+with open('fetchedData.json', 'w+', encoding='utf-8') as fetchedData:
+    dump(dictToJSON(data), fetchedData, ensure_ascii=False, indent=4)
