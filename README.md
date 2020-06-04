@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Github Pins Scraper 🛠️
 
 ### Why this program? 🤠
@@ -27,3 +28,7 @@ To run the script just type
 `user@hostname python3 scraper.py <user>`
 
 >__NOTE:__ Replace <user> with your github username.
+=======
+# github-pins-scraper
+On development... ⌛
+>>>>>>> 1a9a810edec87ee9a81c96c9a5c6f28a193ee504
