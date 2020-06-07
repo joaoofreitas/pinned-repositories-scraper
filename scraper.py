@@ -36,6 +36,9 @@ else:
         names = repos.findAll('span', {'class': 'repo'})
         routeURLs = repos.findAll('a', href=True)
         repoDescriptions = repos.findAll('p', {'class':'pinned-item-desc'})
+        languages = repos.findAll('span', {'class': 'd-inline-block mr-3'})
+        languageColors = repos.findAll('span',{'class': 'repo-language-color'})
+
 
         for name in names:
             print(name.text)
@@ -43,9 +46,15 @@ else:
             print(URL + USER + routeURL['href'])
         for repoDescription in repoDescriptions:
             print(repoDescription.text)
-   
+        for language in languages:
+            print(language.text)
+        for languageColor in languageColors:
+            color = str(languageColor)
+            print(color[59:66])   #Temporary Solution
+            
+        
         numberOfRepos += 1
-        data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text)
+        data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text, language.text, color[59:66])
     
 
     print('=====================================================================================') 
