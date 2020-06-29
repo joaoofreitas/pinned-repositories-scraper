@@ -41,23 +41,31 @@ else:
 
 
         for name in names:
-            print(name.text)
+            parsedName = name.text 
+            print(parsedName)
+ 
         for routeURL in routeURLs:
             print(URL + USER + routeURL['href'])
+        
         for repoDescription in repoDescriptions:
-            print(repoDescription.text)
+            description = repoDescription.text
+            description = description.replace('\n', '') 
+            print(description)
+        
         for language in languages:
-            print(language.text)
+            preParsedLanguage = language.text
+            parsedLanguage = preParsedLanguage.replace('\n', '')
+            print(parsedLanguage)
+        
         for languageColor in languageColors:
             color = str(languageColor)
             print(color[59:66])   #Temporary Solution
             
         
         numberOfRepos += 1
-        data['Repo' + str(numberOfRepos)] = (name.text, URL + USER + routeURL['href'], repoDescription.text, language.text, color[59:66])
-    
+        data['Repo' + str(numberOfRepos)] = parsedName, URL + USER + routeURL['href'], description, parsedLanguage, color[59:66]
 
-    print('=====================================================================================') 
-    print('Converting it all to JSON')
-    with open('fetchedData.json', 'w+', encoding='utf-8') as fetchedData:
-        dump(dictToJSON(data), fetchedData, ensure_ascii=False, indent=4)
+        with open('fetchedData.json', 'w+') as fetchedData:
+            dump(dictToJSON(data), fetchedData, ensure_ascii=False, indent=4)
+
+
